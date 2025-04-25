@@ -23,9 +23,9 @@ const SPACING = 1;
 const sliderItems = [
   {
     id: 1,
-    gradientColors: ["#af1f23", "#d9534f"],
-    title: "Professional Moving",
-    subtitle: "Safe & secure relocation across Dubai",
+    gradientColors: ["#820014", "#d9534f"],
+    title: "International Moving",
+    subtitle: "International Moving Services in 32+ Countries",
     iconName: "truck-moving",
     stats: [
       { label: "Moves", value: "2000+" },
@@ -35,7 +35,7 @@ const sliderItems = [
   },
   {
     id: 2,
-    gradientColors: ["#af1f23", "#d9534f"],
+    gradientColors: ["#820014", "#d9534f"],
 
     title: "Premium Packing",
     subtitle: "High-quality materials for ultimate protection",
@@ -48,7 +48,7 @@ const sliderItems = [
   },
   {
     id: 3,
-    gradientColors: ["#af1f23", "#d9534f"],
+    gradientColors: ["#820014", "#d9534f"],
 
     title: "Express Delivery",
     subtitle: "Same-day moving services available",

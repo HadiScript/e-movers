@@ -45,7 +45,6 @@ export default function HomeScreen({ navigation }) {
 
   const handleBooking = () => {
     router.push("/(tabs)/Booking");
-    // Add your booking logic here, such as navigation.navigate('BookingScreen')
   };
 
   return (
@@ -59,7 +58,6 @@ export default function HomeScreen({ navigation }) {
         <Contact />
         <View style={styles.bottomPadding} />
       </ScrollView>
-
       <BookingBtn onBook={handleBooking} />
     </SafeAreaView>
   );

@@ -515,7 +515,8 @@
 // export default Services;
 
 //@ts-nocheck
-import React from "react";
+//@ts-nocheck
+import React, { useRef } from "react";
 import {
   View,
   Text,
@@ -523,143 +524,178 @@ import {
   ScrollView,
   TouchableOpacity,
   Animated,
+  Dimensions,
+  ImageBackground,
+  Platform,
 } from "react-native";
 import {
   MaterialCommunityIcons,
-  Ionicons,
   FontAwesome5,
   MaterialIcons,
+  AntDesign,
 } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
 
-const ServiceItem = ({ title, icon, color, onPress }) => {
+const { width } = Dimensions.get("window");
+const CARD_WIDTH = width * 0.4;
+const LOCATION_CARD_WIDTH = width * 0.75;
+// import '../../assets/images/dubai.jpeg'
+
+// Animated Card Component for Services
+const AnimatedServiceCard = ({
+  title,
+  icon,
+  description,
+  onPress,
+  index,
+  scrollY,
+}) => {
+  const inputRange = [-1, 0, 100 * index, 100 * (index + 1)];
+
+  const scale = scrollY.interpolate({
+    inputRange,
+    outputRange: [1, 1, 1, 0.9],
+  });
+
+  const opacity = scrollY.interpolate({
+    inputRange,
+    outputRange: [1, 1, 1, 0.7],
+  });
+
   return (
-    <TouchableOpacity style={styles.serviceItem} onPress={onPress}>
-      <View style={[styles.iconContainer, { backgroundColor: color }]}>
-        {icon}
-      </View>
-      <Text style={styles.serviceTitle}>{title}</Text>
+    <Animated.View style={{ transform: [{ scale }], opacity }}>
+      <TouchableOpacity
+        style={styles.serviceCard}
+        onPress={onPress}
+        activeOpacity={0.8}
+      >
+        <LinearGradient
+          colors={["#fff1f0", "#ffccc7"]}
+          style={styles.serviceCardGradient}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+        >
+          <View style={styles.serviceIconContainer}>{icon}</View>
+          <Text style={styles.serviceCardTitle}>{title}</Text>
+          <Text style={styles.serviceCardDescription}>{description}</Text>
+        </LinearGradient>
+      </TouchableOpacity>
+    </Animated.View>
+  );
+};
+
+// Location Card Component
+const LocationCard = ({ name, onPress, img }) => {
+  return (
+    <TouchableOpacity
+      style={styles.locationCard}
+      onPress={onPress}
+      activeOpacity={0.9}
+    >
+      <ImageBackground
+        source={img}
+        // source={{ uri: `https://source.unsplash.com/random/?${name},city` }}
+        style={styles.locationBackground}
+        imageStyle={styles.locationBackgroundImage}
+      >
+        <LinearGradient
+          colors={["rgba(0,0,0,0.1)", "rgba(0,0,0,0.7)"]}
+          style={styles.locationGradient}
+        >
+          <View style={styles.locationContent}>
+            <Text style={styles.locationName}>{name}</Text>
+          </View>
+        </LinearGradient>
+      </ImageBackground>
     </TouchableOpacity>
   );
 };
 
-const MoverTypeItem = ({ title, onPress, icon }) => {
+// Section Header
+const SectionHeader = ({ title, icon, description }) => {
   return (
-    <TouchableOpacity
-      style={styles.moverTypeItem}
-      onPress={onPress}
-      activeOpacity={0.7}
-    >
-      {icon}
-      <Text style={styles.moverTypeText}>{title}</Text>
-    </TouchableOpacity>
+    <View style={styles.sectionHeader}>
+      <View style={styles.sectionTitleContainer}>
+        {icon}
+        <Text style={styles.sectionTitle}>{title}</Text>
+      </View>
+      {description && (
+        <Text style={styles.sectionDescription}>{description}</Text>
+      )}
+    </View>
   );
 };
 
 const Services = ({ fadeAnim, slideAnim }) => {
-  // First row services data
-  const servicesData = [
-    {
-      id: "1",
-      title: "Cleaning",
-      icon: <MaterialCommunityIcons name="broom" size={24} color="white" />,
-      color: "#9c1b1f",
-    },
-    {
-      id: "2",
-      title: "Repairing",
-      icon: <Ionicons name="construct" size={24} color="white" />,
-      color: "#9c1b1f",
-    },
-    {
-      id: "3",
-      title: "Painting",
-      icon: <FontAwesome5 name="paint-roller" size={24} color="white" />,
-      color: "#9c1b1f",
-    },
-    {
-      id: "4",
-      title: "Laundry",
-      icon: (
-        <MaterialCommunityIcons
-          name="washing-machine"
-          size={24}
-          color="white"
-        />
-      ),
-      color: "#9c1b1f",
-    },
-    {
-      id: "5",
-      title: "Appliance",
-      icon: (
-        <MaterialCommunityIcons name="refrigerator" size={24} color="white" />
-      ),
-      color: "#9c1b1f",
-    },
-    {
-      id: "6",
-      title: "Plumbing",
-      icon: <MaterialCommunityIcons name="pipe" size={24} color="white" />,
-      color: "#9c1b1f",
-    },
-    {
-      id: "7",
-      title: "Shifting",
-      icon: <FontAwesome5 name="truck-moving" size={24} color="white" />,
-      color: "#9c1b1f",
-    },
-  ];
+  const scrollY = useRef(new Animated.Value(0)).current;
 
-  // Second row - Mover types data with icons
-  const moverTypesData = [
+  // Moving Services Data
+  const movingServices = [
     {
       id: "1",
       title: "International Moves",
-      icon: <MaterialCommunityIcons name="earth" size={24} color="#af1f23" />,
+      description: "Safe and reliable overseas relocation services",
+      icon: <MaterialCommunityIcons name="earth" size={30} color="#820014" />,
     },
     {
       id: "2",
       title: "Domestic Movers",
-      icon: <FontAwesome5 name="home" size={24} color="#af1f23" />,
+      description: "Smooth transitions for local relocations",
+      icon: <FontAwesome5 name="home" size={28} color="#820014" />,
     },
     {
       id: "3",
       title: "Villa Movers",
+      description: "Specialized moving for villa properties",
       icon: (
-        <MaterialCommunityIcons name="home-city" size={24} color="#af1f23" />
+        <MaterialCommunityIcons name="home-city" size={30} color="#820014" />
       ),
     },
     {
       id: "4",
-      title: "Secure Storage",
-      icon: <MaterialCommunityIcons name="lock" size={24} color="#af1f23" />,
-    },
-    {
-      id: "5",
       title: "Office Movers",
+      description: "Business relocation with minimal disruption",
       icon: (
         <MaterialCommunityIcons
           name="office-building"
-          size={24}
-          color="#af1f23"
+          size={30}
+          color="#820014"
         />
       ),
+    },
+    {
+      id: "5",
+      title: "Furniture Movers",
+      description: "Expert handling of valuable furniture items",
+      icon: <MaterialCommunityIcons name="sofa" size={30} color="#820014" />,
+    },
+  ];
+
+  // Location data for UAE States
+  const locationData = [
+    { id: "1", name: "Dubai", img: require("../../assets/images/dubai.jpg") },
+    {
+      id: "2",
+      name: "Abu Dhabi",
+      img: require("../../assets/images/abu-dhabi.jpg"),
+    },
+    { id: "3", name: "Ajman", img: require("../../assets/images/ajman.jpg") },
+    { id: "4", name: "Al Ain", img: require("../../assets/images/dubai.jpg") },
+    {
+      id: "5",
+      name: "Fujairah",
+      img: require("../../assets/images/dubai.jpg"),
     },
     {
       id: "6",
-      title: "Villa Movers in Dubai",
-      icon: (
-        <MaterialCommunityIcons
-          name="package-variant-closed"
-          size={24}
-          color="#af1f23"
-        />
-      ),
+      name: "Umm Ul Quwain",
+      img: require("../../assets/images/dubai.jpg"),
     },
+    { id: "7", name: "Sharjah", img: require("../../assets/images/dubai.jpg") },
     {
-      id: "7",
-      title: "Furniture Movers",
-      icon: <MaterialCommunityIcons name="sofa" size={24} color="#af1f23" />,
+      id: "8",
+      name: "Ras Al Khaimah",
+      img: require("../../assets/images/dubai.jpg"),
     },
   ];
 
@@ -668,8 +704,8 @@ const Services = ({ fadeAnim, slideAnim }) => {
     // Add your navigation or action logic here
   };
 
-  const handleMoverTypePress = (title) => {
-    console.log(`Mover type pressed: ${title}`);
+  const handleLocationPress = (name) => {
+    console.log(`Location pressed: ${name}`);
     // Add your navigation or action logic here
   };
 
@@ -683,124 +719,208 @@ const Services = ({ fadeAnim, slideAnim }) => {
         },
       ]}
     >
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Services</Text>
+      <Animated.ScrollView
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+        onScroll={Animated.event(
+          [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+          { useNativeDriver: true }
+        )}
+        scrollEventThrottle={16}
+      >
+        {/* Featured Services Section */}
+        <View style={styles.featuredSection}>
+          <SectionHeader
+            title="Featured Services"
+            icon={<AntDesign name="star" size={24} color="#9c1b1f" />}
+            description="Our most popular professional moving solutions"
+          />
 
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.servicesScrollContent}
-        >
-          {servicesData.map((service) => (
-            <ServiceItem
-              key={service.id}
-              title={service.title}
-              icon={service.icon}
-              color={service.color}
-              onPress={() => handleServicePress(service.title)}
-            />
-          ))}
-        </ScrollView>
-      </View>
-
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Moving Services</Text>
-
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.moverTypesScrollContent}
-        >
-          <View style={styles.movingServicesRow}>
-            {moverTypesData.map((moverType) => (
-              <MoverTypeItem
-                key={moverType.id}
-                title={moverType.title}
-                icon={moverType.icon}
-                onPress={() => handleMoverTypePress(moverType.title)}
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.featuredScrollContent}
+            decelerationRate="fast"
+            snapToInterval={CARD_WIDTH + 15}
+            snapToAlignment="start"
+          >
+            {movingServices.map((service, index) => (
+              <AnimatedServiceCard
+                key={service.id}
+                title={service.title}
+                icon={service.icon}
+                description={service.description}
+                onPress={() => handleServicePress(service.title)}
+                index={index}
+                scrollY={scrollY}
               />
             ))}
-          </View>
-        </ScrollView>
-      </View>
+          </ScrollView>
+        </View>
+
+        {/* Locations Section */}
+        <View style={styles.locationsSection}>
+          <SectionHeader
+            title="Service Locations"
+            icon={
+              <MaterialIcons name="location-on" size={24} color="#9c1b1f" />
+            }
+            description="Moving & storage services throughout the UAE"
+          />
+
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.locationsScrollContent}
+            decelerationRate="fast"
+            snapToInterval={LOCATION_CARD_WIDTH + 15}
+            snapToAlignment="center"
+          >
+            {locationData.map((location) => (
+              <LocationCard
+                key={location.id}
+                name={location.name}
+                onPress={() => handleLocationPress(location.name)}
+                img={location.img}
+              />
+            ))}
+          </ScrollView>
+        </View>
+      </Animated.ScrollView>
     </Animated.View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 15,
+    flex: 1,
+    // backgroundColor: "#f8f9fa",
   },
-  section: {
-    marginBottom: 25,
+  scrollContent: {
+    paddingBottom: 30,
+    paddingTop: 15,
+  },
+
+  // Featured Section
+  featuredSection: {
+    marginBottom: 20,
+  },
+  sectionHeader: {
+    paddingHorizontal: 20,
+    marginBottom: 15,
+  },
+  sectionTitleContainer: {
+    flexDirection: "row",
+    alignItems: "center",
   },
   sectionTitle: {
-    fontSize: 22,
+    fontSize: 20,
     fontWeight: "bold",
     color: "#333",
-    marginBottom: 20,
-    paddingHorizontal: 20,
+    marginLeft: 10,
   },
-  servicesScrollContent: {
-    paddingRight: 15,
+  sectionDescription: {
+    fontSize: 13,
+    color: "#666",
+    marginTop: 4,
+    marginLeft: 34,
+  },
+  featuredScrollContent: {
     paddingLeft: 20,
+    paddingRight: 10,
   },
-  serviceItem: {
-    alignItems: "center",
+  serviceCard: {
+    width: CARD_WIDTH,
+    height: 200,
     marginRight: 15,
-    width: 80,
+    borderRadius: 16,
+    overflow: "hidden",
+    // ...Platform.select({
+    //   ios: {
+    //     shadowColor: "#000",
+    //     shadowOffset: { width: 0, height: 5 },
+    //     shadowOpacity: 0.2,
+    //     shadowRadius: 6,
+    //   },
+    //   android: {
+    //     elevation: 8,
+    //   },
+    // }),
   },
-  iconContainer: {
+  serviceCardGradient: {
+    flex: 1,
+    padding: 15,
+    justifyContent: "space-between",
+  },
+  serviceIconContainer: {
     width: 60,
     height: 60,
     borderRadius: 30,
+    backgroundColor: "rgba(201, 7, 7, 0.2)",
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 8,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.2,
-    shadowRadius: 3,
-    elevation: 4,
+    marginBottom: 15,
   },
-  serviceTitle: {
-    fontSize: 12,
-    textAlign: "center",
-    color: "#444",
-    fontWeight: "500",
-  },
-  moverTypesScrollContent: {
-    paddingHorizontal: 20,
-  },
-  movingServicesRow: {
-    flexDirection: "row",
-  },
-  moverTypeItem: {
-    alignItems: "center",
-    backgroundColor: "#f9f9f9",
-    padding: 15,
-    borderRadius: 10,
-    width: 130,
-    marginRight: 12,
-    marginBottom: 12,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 3,
-  },
-  moverTypeText: {
-    marginTop: 10,
-    fontSize: 14,
+  serviceCardTitle: {
+    color: "#5c0011",
+    fontSize: 18,
     fontWeight: "bold",
-    color: "#333",
-    textAlign: "center",
+    marginBottom: 8,
+  },
+  serviceCardDescription: {
+    // color: "rgba(255, 255, 255, 0.9)",
+    color: "#5c0011",
+    fontSize: 13,
+  },
+
+  // Locations Section
+  locationsSection: {
+    marginVertical: 15,
+  },
+  locationsScrollContent: {
+    paddingLeft: 20,
+    paddingRight: 10,
+    paddingBottom: 5,
+  },
+  locationCard: {
+    width: LOCATION_CARD_WIDTH,
+    height: 120,
+    marginRight: 15,
+    borderRadius: 16,
+    overflow: "hidden",
+    ...Platform.select({
+      ios: {
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 3 },
+        shadowOpacity: 0.2,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 4,
+      },
+    }),
+  },
+  locationBackground: {
+    flex: 1,
+  },
+  locationBackgroundImage: {
+    borderRadius: 16,
+  },
+  locationGradient: {
+    flex: 1,
+    justifyContent: "flex-end",
+    padding: 15,
+  },
+  locationContent: {
+    justifyContent: "flex-end",
+  },
+  locationName: {
+    color: "#fff",
+    fontSize: 20,
+    fontWeight: "bold",
+    textShadowColor: "rgba(0, 0, 0, 0.75)",
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 3,
   },
 });
 
