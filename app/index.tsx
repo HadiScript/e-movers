@@ -10,11 +10,13 @@ import {
   Dimensions,
   StatusBar,
   Platform,
+  ActivityIndicator,
 } from "react-native";
 import { useRouter } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 import Logo from "@/components/home-screen/Logo";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Index() {
   const router = useRouter();
@@ -23,6 +25,75 @@ export default function Index() {
   const buttonFadeAnim = useRef(new Animated.Value(0)).current;
   const buttonScaleAnim = useRef(new Animated.Value(0.95)).current;
   const [isPressed, setIsPressed] = useState(false);
+
+  const [isCheckingUserData, setIsCheckingUserData] = useState(true);
+
+  useEffect(() => {
+    // Check if we have existing user data
+    const checkUserData = async () => {
+      try {
+        // Start with checking animation
+        setIsCheckingUserData(true);
+
+        // Check if user data exists in AsyncStorage
+        const userData = await AsyncStorage.getItem("userData");
+
+        if (userData) {
+          const parsedData = JSON.parse(userData);
+          console.log(userData);
+          // If we have a userId, navigate to tabs
+          if (parsedData.userId) {
+            // Navigate to tabs with a slight delay to allow animation
+            setTimeout(() => {
+              router.replace({
+                pathname: "/(tabs)",
+                // params: {
+                //   userId: parsedData.userId,
+                // },
+              });
+            }, 300);
+            return;
+          }
+        }
+
+        // If no user data, show the home screen
+        setIsCheckingUserData(false);
+
+        // Start entry animations
+        Animated.parallel([
+          Animated.timing(fadeAnim, {
+            toValue: 1,
+            duration: 700,
+            useNativeDriver: true,
+          }),
+          Animated.timing(slideAnim, {
+            toValue: 0,
+            duration: 700,
+            useNativeDriver: true,
+          }),
+        ]).start();
+      } catch (error) {
+        console.error("Error checking user data:", error);
+        setIsCheckingUserData(false);
+
+        // Still show home screen on error
+        Animated.parallel([
+          Animated.timing(fadeAnim, {
+            toValue: 1,
+            duration: 700,
+            useNativeDriver: true,
+          }),
+          Animated.timing(slideAnim, {
+            toValue: 0,
+            duration: 700,
+            useNativeDriver: true,
+          }),
+        ]).start();
+      }
+    };
+
+    checkUserData();
+  }, []);
 
   useEffect(() => {
     // Logo animation
@@ -97,9 +168,18 @@ export default function Index() {
     });
   };
 
+  if (isCheckingUserData) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#af1f23" />
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
       <StatusBar translucent backgroundColor="transparent" />
+      <Text>{JSON.stringify()}</Text>
       <ImageBackground
         source={require("../assets/images/get.jpg")}
         style={styles.backgroundImage}
@@ -262,5 +342,9 @@ const styles = StyleSheet.create({
     marginTop: 24,
     opacity: 0.8,
     textAlign: "center",
+  },
+  loadingContainer: {
+    flex: 1,
+    alignContent: "center",
   },
 });

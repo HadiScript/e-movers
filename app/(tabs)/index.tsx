@@ -12,9 +12,11 @@ import Logo from "@/components/home-screen/Logo";
 import Slider from "@/components/home-screen/Slider";
 import Services from "@/components/home-screen/Services";
 import WhyChooseUs from "@/components/home-screen/WhyChooseUs";
+import Header from "@/components/home-screen/header";
 import Contact from "@/components/home-screen/Contact";
 import BookingBtn from "@/components/home-screen/BookingBtn";
 import { router } from "expo-router";
+import { AntDesign } from "@expo/vector-icons";
 
 export default function HomeScreen({ navigation }) {
   // Animation values
@@ -51,7 +53,24 @@ export default function HomeScreen({ navigation }) {
     <SafeAreaView style={styles.container}>
       <StatusBar style="auto" />
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        <Logo fadeAnim={fadeAnim} slideAnim={slideAnim} />
+        {/* <View
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <Logo fadeAnim={fadeAnim} slideAnim={slideAnim} />
+          <AntDesign
+            name="user"
+            size={24}
+            color="#af1f23"
+            style={{ marginRight: 30 }}
+            onPress={() => router.push("/profile")}
+          />
+        </View> */}
+        <Header fadeAnim={fadeAnim} slideAnim={slideAnim} />
         <Slider />
         <Services fadeAnim={fadeAnim} slideAnim={slideAnim} />
         {/* <WhyChooseUs fadeAnim={fadeAnim} /> */}

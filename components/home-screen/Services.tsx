@@ -535,6 +535,7 @@ import {
   AntDesign,
 } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
+import { router } from "expo-router";
 
 const { width } = Dimensions.get("window");
 const CARD_WIDTH = width * 0.4;
@@ -680,27 +681,32 @@ const Services = ({ fadeAnim, slideAnim }) => {
       img: require("../../assets/images/abu-dhabi.jpg"),
     },
     { id: "3", name: "Ajman", img: require("../../assets/images/ajman.jpg") },
-    { id: "4", name: "Al Ain", img: require("../../assets/images/dubai.jpg") },
+    { id: "4", name: "Al Ain", img: require("../../assets/images/al-ain.jpg") },
     {
       id: "5",
       name: "Fujairah",
-      img: require("../../assets/images/dubai.jpg"),
+      img: require("../../assets/images/fujairah.jpg"),
     },
     {
       id: "6",
       name: "Umm Ul Quwain",
-      img: require("../../assets/images/dubai.jpg"),
+      img: require("../../assets/images/ul-q.jpg"),
     },
-    { id: "7", name: "Sharjah", img: require("../../assets/images/dubai.jpg") },
+    {
+      id: "7",
+      name: "Sharjah",
+      img: require("../../assets/images/Sharjah.jpg"),
+    },
     {
       id: "8",
       name: "Ras Al Khaimah",
-      img: require("../../assets/images/dubai.jpg"),
+      img: require("../../assets/images/khaimah.jpg"),
     },
   ];
 
   const handleServicePress = (title) => {
     console.log(`Service pressed: ${title}`);
+    router.push("/Booking");
     // Add your navigation or action logic here
   };
 

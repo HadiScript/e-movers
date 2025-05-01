@@ -6,6 +6,9 @@ export default function TabsLayout() {
   return (
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="index" />
+      {/* booking-success */}
+      <Stack.Screen name="booking-success" />
+      <Stack.Screen name="profile" />
       <Stack.Screen name="Booking" />
     </Stack>
   );

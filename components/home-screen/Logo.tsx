@@ -1,4 +1,5 @@
 //@ts-nocheck
+import { AntDesign } from "@expo/vector-icons";
 import React from "react";
 import { View, Text, StyleSheet, Animated } from "react-native";
 
@@ -15,6 +16,9 @@ const Logo = ({ fadeAnim, slideAnim }) => {
     >
       <Text style={styles.logo}>E HOUSE</Text>
       <Text style={styles.tagline}>MOVERS & PACKERS</Text>
+      {/* <View>
+        <AntDesign name="profile" size={24} color="black" />
+      </View> */}
     </Animated.View>
   );
 };
