@@ -368,11 +368,11 @@ const ITEM_HEIGHT = 250;
 const SPACING = 1;
 
 const sliderImages = [
+  require("../../assets/slider/discounts.jpg"),
   require("../../assets/slider/international.jpg"),
   require("../../assets/slider/Villa.jpg"),
   require("../../assets/slider/Office.jpg"),
   require("../../assets/slider/movers.jpg"),
-  require("../../assets/slider/discounts.jpg"),
 ];
 
 const Slider = () => {

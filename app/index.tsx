@@ -189,7 +189,7 @@ export default function Index() {
           colors={["rgba(0,0,0,0.3)", "rgba(0,0,0,0.75)", "rgba(0,0,0,0.85)"]}
           style={styles.overlay}
         >
-          <Logo fadeAnim={fadeAnim} slideAnim={slideAnim} />
+          <Logo fadeAnim={fadeAnim} slideAnim={slideAnim} white={true}/>
 
           <View style={styles.contentContainer}>
             <Animated.View

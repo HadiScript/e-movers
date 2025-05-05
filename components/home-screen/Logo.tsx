@@ -1,9 +1,10 @@
 //@ts-nocheck
 import { AntDesign } from "@expo/vector-icons";
 import React from "react";
-import { View, Text, StyleSheet, Animated } from "react-native";
+import { View, Text, StyleSheet, Animated, Image } from "react-native";
+// import '../../'
 
-const Logo = ({ fadeAnim, slideAnim }) => {
+const Logo = ({ fadeAnim, slideAnim, white = false }) => {
   return (
     <Animated.View
       style={[
@@ -14,11 +15,18 @@ const Logo = ({ fadeAnim, slideAnim }) => {
         },
       ]}
     >
-      <Text style={styles.logo}>E HOUSE</Text>
-      <Text style={styles.tagline}>MOVERS & PACKERS</Text>
-      {/* <View>
-        <AntDesign name="profile" size={24} color="black" />
-      </View> */}
+      {white ? (
+        <Image
+          source={require("../../assets/images/logo-white.png")}
+          style={styles.logoImage}
+        />
+      ) : (
+        <Image
+          source={require("../../assets/images/logo.png")}
+          style={styles.logoImage}
+        />
+      )}
+      {/* <Text style={styles.tagline}>MOVERS & PACKERS</Text> */}
     </Animated.View>
   );
 };
@@ -26,14 +34,13 @@ const Logo = ({ fadeAnim, slideAnim }) => {
 const styles = StyleSheet.create({
   header: {
     padding: 20,
-    paddingTop: 40,
+    paddingTop: 20,
     alignItems: "center",
   },
-  logo: {
-    fontSize: 28,
-    fontWeight: "bold",
-    color: "#af1f23",
-    letterSpacing: 2,
+  logoImage: {
+    width: 150,
+    height: 60,
+    resizeMode: "contain", // keeps aspect ratio
   },
   tagline: {
     fontSize: 16,
