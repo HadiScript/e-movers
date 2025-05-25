@@ -20,6 +20,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Index() {
   const router = useRouter();
+
+
+  // this is the comment from my new laptop just checking its pushing from here or not
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(50)).current;
   const buttonFadeAnim = useRef(new Animated.Value(0)).current;
