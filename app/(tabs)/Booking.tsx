@@ -783,6 +783,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import apiService from "@/config/ApiServices";
+import { SafeAreaView } from "react-native-safe-area-context";
 // import apiService from "../config/ApiServices";
 
 const ServiceForm = () => {
@@ -1177,11 +1178,14 @@ const ServiceForm = () => {
   return (
     <KeyboardAvoidingView
       style={styles.container}
-      behavior={Platform.OS === "ios" ? "padding" : "padding"} // Use padding for both platforms
-      keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 40} // Adjusted for Android
-      enabled={true}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      // behavior={Platform.OS === "ios" ? "padding" : "padding"} // Use padding for both platforms
+      // keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 40} // Adjusted for Android
+      // enabled={true}
+      keyboardVerticalOffset={0}
     >
-      <StatusBar style="light" backgroundColor="#af1f23" />
+      <StatusBar barStyle="light-content" />
+      {/* <StatusBar style="light" backgroundColor="#af1f23" /> */}
 
       {/* Header with back button */}
       <LinearGradient
@@ -1202,37 +1206,41 @@ const ServiceForm = () => {
       </LinearGradient>
 
       {/* Main Form */}
-      <View style={styles.formWrapper}>
-        <ScrollView
-          ref={scrollViewRef}
-          contentContainerStyle={styles.scrollContainer}
-          showsVerticalScrollIndicator={false}
-          keyboardShouldPersistTaps="always" // Changed to always to ensure focus isn't lost
-          bounces={false}
-        >
-          <Animated.View
-            style={[
-              styles.formContainer,
-              { opacity: fadeAnim, transform: [{ translateY: slideAnim }] },
-            ]}
-          >
-            <View style={styles.formHeader}>
-              <LinearGradient
-                colors={["#af1f23", "#d8373b"]}
-                style={styles.iconCircle}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 0 }}
-              >
-                <Ionicons name="car" size={28} color="#fff" />
-              </LinearGradient>
-              <Text style={styles.formTitle}>Delivery Details</Text>
-              <Text style={styles.formSubtitle}>
-                Please fill in your delivery information below
-              </Text>
-            </View>
+      {/* <View style={styles.formWrapper}>
+       
+      </View> */}
 
-            {/* User Information Summary */}
-            {/* <View style={styles.userInfoCard}>
+      <ScrollView
+        ref={scrollViewRef}
+        style={styles.scrollViewStyle}
+        contentContainerStyle={styles.scrollContainer}
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="always" // Changed to always to ensure focus isn't lost
+        bounces={false}
+      >
+        <Animated.View
+          style={[
+            styles.formContainer,
+            { opacity: fadeAnim, transform: [{ translateY: slideAnim }] },
+          ]}
+        >
+          <View style={styles.formHeader}>
+            <LinearGradient
+              colors={["#af1f23", "#d8373b"]}
+              style={styles.iconCircle}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
+            >
+              <Ionicons name="car" size={28} color="#fff" />
+            </LinearGradient>
+            <Text style={styles.formTitle}>Delivery Details</Text>
+            <Text style={styles.formSubtitle}>
+              Please fill in your delivery information below
+            </Text>
+          </View>
+
+          {/* User Information Summary */}
+          {/* <View style={styles.userInfoCard}>
               <View style={styles.userInfoHeader}>
                 <Ionicons
                   name="person-circle-outline"
@@ -1255,210 +1263,206 @@ const ServiceForm = () => {
               </View>
             </View> */}
 
-            {/* Locations Section */}
-            <View style={styles.sectionDivider}>
-              <View style={styles.dividerLine} />
-              <View style={styles.sectionHeader}>
-                <Ionicons name="location" size={16} color="#fff" />
-              </View>
-              <View style={styles.dividerLine} />
+          {/* Locations Section */}
+          <View style={styles.sectionDivider}>
+            <View style={styles.dividerLine} />
+            <View style={styles.sectionHeader}>
+              <Ionicons name="location" size={16} color="#fff" />
             </View>
-            <Text style={styles.sectionTitle}>Pickup & Delivery Locations</Text>
+            <View style={styles.dividerLine} />
+          </View>
+          <Text style={styles.sectionTitle}>Pickup & Delivery Locations</Text>
 
-            {/* Pick up location Field */}
-            <View style={styles.inputContainer}>
-              <Text style={styles.inputLabel}>Pickup Location</Text>
-              <TouchableWithoutFeedback
-                onPress={() => handleWrapperPress("pickupLocation")}
-              >
-                <View
-                  style={[
-                    styles.inputWrapper,
-                    currentFocus === "pickupLocation" && styles.focusedInput,
-                    errors.pickupLocation && styles.errorInput,
-                  ]}
-                >
-                  {getFieldIcon("pickupLocation")}
-                  <TextInput
-                    ref={pickupLocationInputRef}
-                    style={styles.input}
-                    placeholder="Enter pickup address"
-                    placeholderTextColor="#aaa"
-                    value={formData.pickupLocation}
-                    onChangeText={(text) =>
-                      handleChange("pickupLocation", text)
-                    }
-                    onFocus={() => handleFocus("pickupLocation")}
-                    onBlur={() => setCurrentFocus(null)}
-                    returnKeyType="next"
-                    blurOnSubmit={false}
-                    onSubmitEditing={() => focusInput("dropLocation")}
-                    autoFocus={true} // First field gets focus
-                  />
-                </View>
-              </TouchableWithoutFeedback>
-              {errors.pickupLocation && (
-                <Text style={styles.errorText}>{errors.pickupLocation}</Text>
-              )}
-            </View>
-
-            {/* Drop Location Field */}
-            <View style={styles.inputContainer}>
-              <Text style={styles.inputLabel}>Drop-off Location</Text>
-              <TouchableWithoutFeedback
-                onPress={() => handleWrapperPress("dropLocation")}
-              >
-                <View
-                  style={[
-                    styles.inputWrapper,
-                    currentFocus === "dropLocation" && styles.focusedInput,
-                    errors.dropLocation && styles.errorInput,
-                  ]}
-                >
-                  {getFieldIcon("dropLocation")}
-                  <TextInput
-                    ref={dropLocationInputRef}
-                    style={styles.input}
-                    placeholder="Enter delivery address"
-                    placeholderTextColor="#aaa"
-                    value={formData.dropLocation}
-                    onChangeText={(text) => handleChange("dropLocation", text)}
-                    onFocus={() => handleFocus("dropLocation")}
-                    onBlur={() => setCurrentFocus(null)}
-                    returnKeyType="next"
-                    blurOnSubmit={false}
-                  />
-                </View>
-              </TouchableWithoutFeedback>
-              {errors.dropLocation && (
-                <Text style={styles.errorText}>{errors.dropLocation}</Text>
-              )}
-            </View>
-
-            {/* Service Section */}
-            <View style={styles.sectionDivider}>
-              <View style={styles.dividerLine} />
-              <View style={styles.sectionHeader}>
-                <Ionicons name="settings-outline" size={16} color="#fff" />
-              </View>
-              <View style={styles.dividerLine} />
-            </View>
-            <Text style={styles.sectionTitle}>Service Details</Text>
-
-            {/* Service Selection */}
-            <View style={styles.inputContainer}>
-              <Text style={styles.inputLabel}>Select Service Type</Text>
-              <TouchableOpacity
+          {/* Pick up location Field */}
+          <View style={styles.inputContainer}>
+            <Text style={styles.inputLabel}>Pickup Location</Text>
+            <TouchableWithoutFeedback
+              onPress={() => handleWrapperPress("pickupLocation")}
+            >
+              <View
                 style={[
-                  styles.serviceSelector,
-                  errors.service && styles.errorInput,
+                  styles.inputWrapper,
+                  currentFocus === "pickupLocation" && styles.focusedInput,
+                  errors.pickupLocation && styles.errorInput,
                 ]}
-                onPress={handleServicePress}
-                activeOpacity={0.7}
               >
-                <View style={styles.serviceSelectorContent}>
-                  {getFieldIcon("service")}
-                  <Text
-                    style={[
-                      styles.serviceSelectorText,
-                      !formData.service && styles.placeholderText,
-                    ]}
-                  >
-                    {formData.service
-                      ? services.find((s) => s.id === formData.service)?.name
-                      : "Select a Service"}
-                  </Text>
-                </View>
-                <View style={styles.chevronContainer}>
-                  <AntDesign name="down" size={16} color="#777" />
-                </View>
-              </TouchableOpacity>
-              {errors.service && (
-                <Text style={styles.errorText}>{errors.service}</Text>
-              )}
-            </View>
+                {getFieldIcon("pickupLocation")}
+                <TextInput
+                  ref={pickupLocationInputRef}
+                  style={styles.input}
+                  placeholder="Enter pickup address"
+                  placeholderTextColor="#aaa"
+                  value={formData.pickupLocation}
+                  onChangeText={(text) => handleChange("pickupLocation", text)}
+                  onFocus={() => handleFocus("pickupLocation")}
+                  onBlur={() => setCurrentFocus(null)}
+                  returnKeyType="next"
+                  blurOnSubmit={false}
+                  onSubmitEditing={() => focusInput("dropLocation")}
+                  autoFocus={true} // First field gets focus
+                />
+              </View>
+            </TouchableWithoutFeedback>
+            {errors.pickupLocation && (
+              <Text style={styles.errorText}>{errors.pickupLocation}</Text>
+            )}
+          </View>
 
-            {/* Message Field */}
-            <View style={styles.inputContainer}>
-              <Text style={styles.inputLabel}>
-                Special Instructions (Optional)
-              </Text>
-              <TouchableWithoutFeedback
-                onPress={() => handleWrapperPress("message")}
+          {/* Drop Location Field */}
+          <View style={styles.inputContainer}>
+            <Text style={styles.inputLabel}>Drop-off Location</Text>
+            <TouchableWithoutFeedback
+              onPress={() => handleWrapperPress("dropLocation")}
+            >
+              <View
+                style={[
+                  styles.inputWrapper,
+                  currentFocus === "dropLocation" && styles.focusedInput,
+                  errors.dropLocation && styles.errorInput,
+                ]}
               >
-                <View
-                  style={[
-                    styles.messageWrapper,
-                    currentFocus === "message" && styles.focusedInput,
-                  ]}
-                >
-                  <View style={styles.messageIconContainer}>
-                    {getFieldIcon("message")}
-                  </View>
-                  <TextInput
-                    ref={messageInputRef}
-                    style={styles.messageInput}
-                    placeholder="Add any special requirements or notes"
-                    placeholderTextColor="#aaa"
-                    value={formData.message}
-                    onChangeText={(text) => handleChange("message", text)}
-                    multiline={true}
-                    numberOfLines={4}
-                    textAlignVertical="top"
-                    onFocus={() => handleFocus("message")}
-                    onBlur={() => setCurrentFocus(null)}
-                    returnKeyType="done"
-                  />
-                </View>
-              </TouchableWithoutFeedback>
-            </View>
+                {getFieldIcon("dropLocation")}
+                <TextInput
+                  ref={dropLocationInputRef}
+                  style={styles.input}
+                  placeholder="Enter delivery address"
+                  placeholderTextColor="#aaa"
+                  value={formData.dropLocation}
+                  onChangeText={(text) => handleChange("dropLocation", text)}
+                  onFocus={() => handleFocus("dropLocation")}
+                  onBlur={() => setCurrentFocus(null)}
+                  returnKeyType="next"
+                  blurOnSubmit={false}
+                />
+              </View>
+            </TouchableWithoutFeedback>
+            {errors.dropLocation && (
+              <Text style={styles.errorText}>{errors.dropLocation}</Text>
+            )}
+          </View>
 
-            {/* Submit Button */}
+          {/* Service Section */}
+          <View style={styles.sectionDivider}>
+            <View style={styles.dividerLine} />
+            <View style={styles.sectionHeader}>
+              <Ionicons name="settings-outline" size={16} color="#fff" />
+            </View>
+            <View style={styles.dividerLine} />
+          </View>
+          <Text style={styles.sectionTitle}>Service Details</Text>
+
+          {/* Service Selection */}
+          <View style={styles.inputContainer}>
+            <Text style={styles.inputLabel}>Select Service Type</Text>
             <TouchableOpacity
               style={[
-                styles.submitButton,
-                isSubmitting && styles.disabledButton,
+                styles.serviceSelector,
+                errors.service && styles.errorInput,
               ]}
-              onPress={handleSubmit}
-              disabled={isSubmitting}
-              activeOpacity={0.8}
+              onPress={handleServicePress}
+              activeOpacity={0.7}
             >
-              <LinearGradient
-                colors={
-                  isSubmitting ? ["#bbbbbb", "#999999"] : ["#af1f23", "#d8373b"]
-                }
-                style={styles.gradient}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 0 }}
-              >
-                {isSubmitting ? (
-                  <ActivityIndicator color="#ffffff" size="small" />
-                ) : (
-                  <>
-                    <Text style={styles.submitButtonText}>Submit Request</Text>
-                    <Ionicons name="arrow-forward" size={20} color="#ffffff" />
-                  </>
-                )}
-              </LinearGradient>
-            </TouchableOpacity>
-
-            {/* Success message */}
-            {showSuccess && (
-              <Animated.View style={styles.successContainer}>
-                <View style={styles.successIcon}>
-                  <AntDesign name="checkcircle" size={24} color="#27ae60" />
-                </View>
-                <Text style={styles.successText}>
-                  Your booking has been submitted successfully!
+              <View style={styles.serviceSelectorContent}>
+                {getFieldIcon("service")}
+                <Text
+                  style={[
+                    styles.serviceSelectorText,
+                    !formData.service && styles.placeholderText,
+                  ]}
+                >
+                  {formData.service
+                    ? services.find((s) => s.id === formData.service)?.name
+                    : "Select a Service"}
                 </Text>
-              </Animated.View>
+              </View>
+              <View style={styles.chevronContainer}>
+                <AntDesign name="down" size={16} color="#777" />
+              </View>
+            </TouchableOpacity>
+            {errors.service && (
+              <Text style={styles.errorText}>{errors.service}</Text>
             )}
+          </View>
 
-            {/* Padding for keyboard */}
-            <View style={{ height: keyboardVisible ? keyboardHeight : 20 }} />
-          </Animated.View>
-        </ScrollView>
-      </View>
+          {/* Message Field */}
+          <View style={styles.inputContainer}>
+            <Text style={styles.inputLabel}>
+              Special Instructions (Optional)
+            </Text>
+            <TouchableWithoutFeedback
+              onPress={() => handleWrapperPress("message")}
+            >
+              <View
+                style={[
+                  styles.messageWrapper,
+                  currentFocus === "message" && styles.focusedInput,
+                ]}
+              >
+                <View style={styles.messageIconContainer}>
+                  {getFieldIcon("message")}
+                </View>
+                <TextInput
+                  ref={messageInputRef}
+                  style={styles.messageInput}
+                  placeholder="Add any special requirements or notes"
+                  placeholderTextColor="#aaa"
+                  value={formData.message}
+                  onChangeText={(text) => handleChange("message", text)}
+                  multiline={true}
+                  numberOfLines={4}
+                  textAlignVertical="top"
+                  onFocus={() => handleFocus("message")}
+                  onBlur={() => setCurrentFocus(null)}
+                  returnKeyType="done"
+                />
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
+
+          {/* Submit Button */}
+          <TouchableOpacity
+            style={[styles.submitButton, isSubmitting && styles.disabledButton]}
+            onPress={handleSubmit}
+            disabled={isSubmitting}
+            activeOpacity={0.8}
+          >
+            <LinearGradient
+              colors={
+                isSubmitting ? ["#bbbbbb", "#999999"] : ["#af1f23", "#d8373b"]
+              }
+              style={styles.gradient}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
+            >
+              {isSubmitting ? (
+                <ActivityIndicator color="#ffffff" size="small" />
+              ) : (
+                <>
+                  <Text style={styles.submitButtonText}>Submit Request</Text>
+                  <Ionicons name="arrow-forward" size={20} color="#ffffff" />
+                </>
+              )}
+            </LinearGradient>
+          </TouchableOpacity>
+
+          {/* Success message */}
+          {showSuccess && (
+            <Animated.View style={styles.successContainer}>
+              <View style={styles.successIcon}>
+                <AntDesign name="checkcircle" size={24} color="#27ae60" />
+              </View>
+              <Text style={styles.successText}>
+                Your booking has been submitted successfully!
+              </Text>
+            </Animated.View>
+          )}
+
+          {/* Padding for keyboard */}
+          {/* <View
+              style={{ height: keyboardVisible ? keyboardHeight * 0.3 : 0 }}
+            /> */}
+        </Animated.View>
+      </ScrollView>
 
       {/* Service Selection Modal */}
       <Modal
@@ -1514,19 +1518,26 @@ const ServiceForm = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f5f5f7",
+    backgroundColor: "#f8f8f8",
   },
 
-  formWrapper: {
+  // formWrapper: {
+  //   flex: 1,
+  // },
+
+  scrollViewStyle: {
     flex: 1,
   },
+
   header: {
     flexDirection: "row",
-    justifyContent: "space-between",
+
     alignItems: "center",
+    justifyContent: "space-between",
     paddingHorizontal: 16,
-    paddingBottom: 16,
     paddingTop: Platform.OS === "android" ? 45 : 50,
+    paddingBottom: 16,
+    zIndex: 10,
   },
   backButton: {
     padding: 8,
@@ -1541,9 +1552,9 @@ const styles = StyleSheet.create({
   rightHeaderSpace: {
     width: 40, // To balance the header layout
   },
+
   scrollContainer: {
     padding: 16,
-    paddingBottom: 80, // Extra padding at bottom for keyboard
   },
   formContainer: {
     backgroundColor: "#ffffff",
@@ -1554,6 +1565,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.05,
     shadowRadius: 10,
     elevation: 3,
+    // marginBottom: 20,
   },
   formHeader: {
     alignItems: "center",
