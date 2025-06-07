@@ -182,7 +182,7 @@ export default function Index() {
   return (
     <View style={styles.container}>
       <StatusBar translucent backgroundColor="transparent" />
-      <Text>{JSON.stringify()}</Text>
+      {/* <Text>{JSON.stringify()}</Text> */}
       <ImageBackground
         source={require("../assets/images/get.jpg")}
         style={styles.backgroundImage}

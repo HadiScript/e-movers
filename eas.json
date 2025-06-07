@@ -13,6 +13,12 @@
     },
     "production": {
       "autoIncrement": true
+    },
+    "production-local": {
+      "android": {
+        "buildType": "app-bundle",
+        "credentialsSource": "local"
+      }
     }
   },
   "submit": {

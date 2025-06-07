@@ -924,28 +924,28 @@ const ServiceForm = () => {
   const services = [
     {
       id: 1,
-      name: "Premium Delivery",
+      name: "International Moving",
       icon: "rocket",
-      description: "Fast and secure delivery within 24 hours",
+      description: "Moving across 32+ countries",
     },
     {
       id: 2,
-      name: "Standard Delivery",
+      name: "Domestic Moving",
       icon: "truck",
-      description: "Regular delivery within 2-3 business days",
+      description: "Moving Across All UAE States",
     },
-    {
-      id: 3,
-      name: "Economy Delivery",
-      icon: "package",
-      description: "Budget-friendly option with 3-5 day delivery",
-    },
-    {
-      id: 4,
-      name: "International Shipping",
-      icon: "globe",
-      description: "Worldwide shipping with customs handling",
-    },
+    // {
+    //   id: 3,
+    //   name: "Economy Delivery",
+    //   icon: "package",
+    //   description: "Budget-friendly option with 3-5 day delivery",
+    // },
+    // {
+    //   id: 4,
+    //   name: "International Shipping",
+    //   icon: "globe",
+    //   description: "Worldwide shipping with customs handling",
+    // },
   ];
 
   const validateForm = () => {

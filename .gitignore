@@ -2,6 +2,7 @@
 
 # dependencies
 node_modules/
+android/
 
 # Expo
 .expo/
@@ -36,3 +37,13 @@ yarn-error.*
 *.tsbuildinfo
 
 app-example
+credentials.json
+
+
+android/
+ios/
+
+
+# Local credentials
+credentials.json
+*.keystore
