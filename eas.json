@@ -15,8 +15,7 @@
       "autoIncrement": true,
       "ios": {
         "distribution": "store",
-        "credentialsSource": "remote",
-        "submitProfile": "production"
+        "credentialsSource": "remote"
       }
     },
     "production-local": {
@@ -29,8 +28,7 @@
   "submit": {
     "production": {
       "ios": {
-        "appleId": "$EXPO_APPLE_ID",
-        "ascAppId": "YOUR_APP_STORE_CONNECT_APP_ID"
+        "appleId": "$EXPO_APPLE_ID"
       }
     }
   }
