@@ -10,12 +10,9 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
+      "bundleIdentifier": "com.hadiscript.dtqupdated",
       "runtimeVersion": {
         "policy": "appVersion"
-      },
-      "bundleIdentifier": "com.hadiscript.dtqupdated",
-      "infoPlist": {
-        "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {
